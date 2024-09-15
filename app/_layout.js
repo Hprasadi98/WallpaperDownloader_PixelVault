@@ -1,17 +1,23 @@
-import { Stack } from 'expo-router'
-import React from 'react'
+import { Stack } from "expo-router";
+import React from "react";
 
 function Layout() {
   return (
     <Stack>
-        <Stack.Screen 
-        name="index"  
+      <Stack.Screen
+        name="index"
         options={{
-          headerShown: false
+          headerShown: false,
         }}
-        />
+      />
+      <Stack.Screen
+        name="home/index"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
-  )
+  );
 }
 
-export default Layout
+export default Layout;
