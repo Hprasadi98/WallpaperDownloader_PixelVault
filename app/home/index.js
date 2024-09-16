@@ -1,5 +1,5 @@
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,9 @@ import { hp, wp } from "../../helpers/common";
 import Categories from "../../components/categories";
 import { apiCall } from "../../api";
 import ImageGrid from "../../components/imageGrid";
+import {debounce} from 'lodash'
+
+var page=1;
 
 function HomeScreen() {
   const { top } = useSafeAreaInsets();
@@ -42,6 +45,23 @@ function HomeScreen() {
     setActiveCategory(cat);
   }
 
+  const handleSearch =(text)=>{
+    setSearch(text);
+    if(text.length>2){
+      page=1;
+      setImages([]);
+      fetchImages({page, q:text});
+    }
+    if(text==""){
+      page=1;
+      setImages([]);
+      searchInputRef.current.clear();
+      fetchImages({page});
+    }
+  }
+
+  const handleTextDebounce =useCallback(debounce(handleSearch, 400), []);
+
   return (
     <View style={[styles.container, { paddingTop }]}>
       <View style={styles.header}>
@@ -67,13 +87,12 @@ function HomeScreen() {
           </View>
           <TextInput
             placeholder="Search for photos..."
-            value={search}
             ref={searchInputRef}
-            onChangeText={(value) => setSearch(value)}
+            onChangeText={handleTextDebounce}
             style={styles.searchInput}
           />
           {search && (
-            <Pressable style={styles.closeIcon}>
+            <Pressable onPress={()=>handleSearch("")} style={styles.closeIcon}>
               <Ionicons
                 name="close"
                 size={24}
