@@ -43,6 +43,14 @@ function HomeScreen() {
 
   const handlechangecategory = (cat)=>{
     setActiveCategory(cat);
+    clearSearch();
+    setImages([]);
+    page=1;
+    let params ={
+      page,
+    }
+    if(cat) params.category=cat;
+    fetchImages(params, false);
   }
 
   const handleSearch =(text)=>{
@@ -50,17 +58,24 @@ function HomeScreen() {
     if(text.length>2){
       page=1;
       setImages([]);
-      fetchImages({page, q:text});
+      setActiveCategory(null);
+      fetchImages({page, q:text}, false);
     }
     if(text==""){
       page=1;
       setImages([]);
+      setActiveCategory(null);
       searchInputRef.current.clear();
-      fetchImages({page});
+      fetchImages({page},false);
     }
   }
 
   const handleTextDebounce =useCallback(debounce(handleSearch, 400), []);
+
+  const clearSearch =()=>{
+    setSearch("");
+    searchInputRef.current.clear();
+  }
 
   return (
     <View style={[styles.container, { paddingTop }]}>
