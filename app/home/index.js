@@ -1,5 +1,5 @@
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,31 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "../../constants/theme";
 import { hp, wp } from "../../helpers/common";
 import Categories from "../../components/categories";
+import { apiCall } from "../../api";
+import ImageGrid from "../../components/imageGrid";
 
 function HomeScreen() {
   const { top } = useSafeAreaInsets();
   const paddingTop = top > 0 ? top + 10 : 30;
   const [search, setSearch] = useState("");
+  const [images, setImages] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const searchInputRef = useRef(null);
+
+  useEffect(()=> {
+    fetchImages();
+  },[]);
+
+  const fetchImages = async (params={page:1}, append=false) => {
+    let res = await apiCall(params);
+    if(res.success && res?.data?.hits){
+      if(append){
+        setImages([...images,...res.data.hits]);
+      }else{
+        setImages([...res.data.hits]);
+      }
+    }
+  }
 
   const handlechangecategory = (cat)=>{
     setActiveCategory(cat);
@@ -67,6 +85,11 @@ function HomeScreen() {
         <View style={styles.categories}>
           <Categories activeCategory={activeCategory} handlechangecategory={handlechangecategory}/>
         </View>
+        <View>
+          {
+            images.length > 0 && <ImageGrid images={images}/>
+          }
+        </View>
       </ScrollView>
     </View>
   );
@@ -87,6 +110,7 @@ const styles = StyleSheet.create({
     fontSize: hp(4),
     fontWeight: theme.fontweights.semibold,
     color: theme.colors.neutral(0.9),
+    backgroundColor: theme.colors.white,
   },
   searchBar: {
     marginHorizontal: wp(4),
