@@ -15,6 +15,7 @@ import Categories from "../../components/categories";
 import { apiCall } from "../../api";
 import ImageGrid from "../../components/imageGrid";
 import {debounce} from 'lodash'
+import FiltersModal from "../../components/filterModal";
 
 var page=1;
 
@@ -25,6 +26,7 @@ function HomeScreen() {
   const [images, setImages] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const searchInputRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(()=> {
     fetchImages();
@@ -32,6 +34,7 @@ function HomeScreen() {
 
   const fetchImages = async (params={page:1}, append=false) => {
     let res = await apiCall(params);
+    console.log('Success');
     if(res.success && res?.data?.hits){
       if(append){
         setImages([...images,...res.data.hits]);
@@ -77,13 +80,21 @@ function HomeScreen() {
     searchInputRef.current.clear();
   }
 
+  const openFilterModal = ()=>{
+    modalRef?.current?.present();
+  }
+
+  const closeFilterModal = ()=>{
+    modalRef?.current?.close();
+  }
+
   return (
     <View style={[styles.container, { paddingTop }]}>
       <View style={styles.header}>
         <Pressable>
           <Text style={styles.title}>PixelVault</Text>
         </Pressable>
-        <Pressable>
+        <Pressable onPress={openFilterModal}>
           <FontAwesome6
             name="bars-staggered"
             size={22}
@@ -125,6 +136,7 @@ function HomeScreen() {
           }
         </View>
       </ScrollView>
+      <FiltersModal modalRef={modalRef}/>
     </View>
   );
 }
@@ -144,7 +156,6 @@ const styles = StyleSheet.create({
     fontSize: hp(4),
     fontWeight: theme.fontweights.semibold,
     color: theme.colors.neutral(0.9),
-    backgroundColor: theme.colors.white,
   },
   searchBar: {
     marginHorizontal: wp(4),
