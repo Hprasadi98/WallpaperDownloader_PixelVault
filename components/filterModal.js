@@ -5,7 +5,7 @@ import { BlurView } from 'expo-blur'
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import {wp, hp, capitalize} from '../helpers/common'
 import {theme} from '../constants/theme'
-import { CommonFilterRow, SelctionView } from './filterViews'
+import { ColorFilter, CommonFilterRow, SelctionView } from './filterViews'
 import { data } from '../constants/data'
 
 const FiltersModal = ({
@@ -59,7 +59,7 @@ const sections = {
   "order": (props) => <CommonFilterRow {...props} />,
   "orientation": (props) => <CommonFilterRow {...props} />,
   "type": (props) => <CommonFilterRow {...props} />,
-  "colors": (props) => <CommonFilterRow {...props} />
+  "colors": (props) => <ColorFilter {...props} />
 }
 
 const customBackdrop =({animatedIndex, style})=>{
