@@ -13,7 +13,7 @@ const FiltersModal = ({
   onClose,
   onApply,
   onReset,
-  fillers,
+  filters,
   setFilters
 }) => {
     const snapPoints = useMemo(()=>['75%'],[]);
@@ -40,7 +40,7 @@ const FiltersModal = ({
                         title={title}
                         content={sectionView({
                           data: sectionData,
-                          fillers,
+                          filters,
                           setFilters,
                           filterName: sectionName
                         })}

@@ -15,26 +15,26 @@ export const SelctionView = ({title, content}) =>{
 
 export  const CommonFilterRow = ({data, filterName, filters, setFilters}) => {
     const onSelect = (item) => {
-        setFilters({...filters, [filterName]: item});
+      console.log(`Selected item: ${item}`);
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [filterName]: item,
+    }));
     }
     return(
       <View style={styles.flexRowWrap}>
-        {
-            data && data.map((item, index)=>{
-                let isActive = filters && filters[filterName] == item;
-                let backgroundColor = isActive ? theme.colors.neutral(0.7): 'white';
-                let color = isActive ? 'white': theme.colors.neutral(0.7); 
+        {data && data.map((item, index) => {
+                let isActive = filters && filters[filterName] === item;
                 return (
-                    <Pressable 
-                    onPress={()=>onSelect(item)}
-                    key={item}
-                    style={[styles.outlinedButton, {backgroundColor}]}
+                    <Pressable
+                        onPress={() => onSelect(item)}
+                        key={item}
+                        style={[styles.outlinedButton, {backgroundColor: isActive? theme.colors.neutral(0.7) : 'white'}]}
                     >
-                        <Text style={[styles.outlinedButtonText, {color}]}>{capitalize(item)}</Text>
+                        <Text style={[styles.outlinedButtonText, {color: isActive? 'white' : theme.colors.neutral(0.7)}]}>{capitalize(item)}</Text>
                     </Pressable>
                 );
-            })
-        }
+            })}
       </View>
     )
   }
@@ -59,6 +59,6 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:theme.colors.grayBG,
         borderRadius:theme.radius.xs,
-        borderCurve:'continuous'
+        borderCurve:'continuous',
     }
 })
