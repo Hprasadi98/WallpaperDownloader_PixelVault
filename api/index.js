@@ -5,14 +5,14 @@ const API_KEY = '46002713-46208979b8111743bdf957526';
 const apiURL = `https://pixabay.com/api/?key=${API_KEY}`;
 
 const formatUrl = (params) =>{
-    let url = apiURL + "&per_page=25&safeSearch=true&editors_choice=true"
+    let url = apiURL + "&per_page=30&safeSearch=true&editors_choice=true"
     if(!params) return url;
     let paramsKey = Object.keys(params);
     paramsKey.map(key=>{
         let value = key == 'q' ? encodeURIComponent(params[key]) : params[key];
         url += `&${key}=${value}`;
     });
-    console.log('final url: ', url);
+    //console.log('final url: ', url);
     return url;
 }
 
