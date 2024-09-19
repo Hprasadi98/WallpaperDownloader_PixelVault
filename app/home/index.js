@@ -140,7 +140,27 @@ function HomeScreen() {
   }
 
   const handleScroll = (event)=>{
-    
+    const contentHeight = event.nativeEvent.contentSize.height;
+    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
+    const scrollOffset = event.nativeEvent.contentOffset.y;
+    const bottomPosition = contentHeight - scrollViewHeight;
+
+    if (scrollOffset >= bottomPosition-1){
+      if(!isEndReached){
+        setIsEndReached(true);
+        console.log('setting isEndReached');
+        ++page;
+        let params ={
+          page,
+         ...filters
+        }
+        if(activeCategory) params.category = activeCategory;
+        if(search) params.q = search;
+        fetchImages(params, true);
+      }
+    }else if(isEndReached){
+      setIsEndReached(false);
+    }
   }
 
   const handleScrollUp =()=>{
